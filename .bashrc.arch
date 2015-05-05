@@ -16,6 +16,10 @@ alias fixvagrant_inicialize="sudo modprobe vboxdrv";
 alias cleanpacman="pacman -Qtdq > /dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')"
 alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches"
 alias fixnfs="systemctl start rpcbind.service && systemctl start nfs-server.service"
+alias hidemouse="nohup unclutter -display :0.0 -idle 3 &"
+alias changesgit="git diff --name-status -r"
+alias diffstatgit="git diff --stat -r"
+alias whatis="git show -s --pretty='tformat:%h, %s, %ad' --date=short"
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
