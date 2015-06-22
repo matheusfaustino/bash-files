@@ -20,12 +20,21 @@ alias hidemouse="nohup unclutter -display :0.0 -idle 3 &"
 alias changesgit="git diff --name-status -r"
 alias diffstatgit="git diff --stat -r"
 alias whatis="git show -s --pretty='tformat:%h, %s, %ad' --date=short"
+alias loggit="git log --graph --decorate --pretty=oneline --abbrev-commit"
+alias listbranch="git branch -v"
+alias status="git status"
+alias commit="git commit"
+
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
+
+if [ -d "$HOME/opt/node-webkit" ]; then
+    PATH="$PATH:$HOME/opt/node-webkit"
+fi
 
 if [ -f /usr/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh ]; then
     source /usr/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh
@@ -53,14 +62,15 @@ fixvagrant() {
     sudo modprobe vboxnetadp
 }
 
+updatecontaineredirectoryx() {
+    IP=$(docker inspect edirectoryx | grep IPAddress | cut -f4 -d'"')
+    OLD_IP=$(cat ~/old_ip_edirectoryx)
+    sudo sed -i -e "s/$OLD_IP/$IP/g" /etc/hosts
+    echo $IP > ~/old_ip_edirectoryx
+}
+
 export -f fixinicial
 export -f fixvagrant
+export -f updatecontaineredirectoryx
 
 export PATH=/home/faustino/.gem/ruby/2.2.0/bin:$PATH
-
-#function _update_ps1() {
-#   export PS1="$(~/bin/powerline-js/powerline.js $? --shell bash --depth 4)"
-#}
-#export PROMPT_COMMAND="_update_ps1"
-
-#let g:airline_powerline_fonts=1
