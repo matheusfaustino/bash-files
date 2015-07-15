@@ -10,9 +10,7 @@ alias fixteclado="sudo setxkbmap -model abnt2 -layout br -variant abnt2";
 alias ip="./ip.sh";
 alias fixwatchcss="echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p";
 alias fixdropbox="echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p";
-alias folder_vagrant="cd ~/vagrant/";
-# alias vagranton="vagrant up && vagrant ssh";
-alias porstListing="sudo netstat -tulpn";
+alias portslisting="sudo netstat -tulpn";
 alias fixvagrant_inicialize="sudo modprobe vboxdrv";
 alias cleanpacman="pacman -Qtdq > /dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')"
 alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches"
