@@ -2,8 +2,9 @@
 # ~/.bashrc
 #
 
+alias ll="ls -l"
 alias restartnetwork="sudo systemctl restart systemd-networkd";
-alias upgrade="yaourt -Syu";
+alias upgrade="yaourt -Syua";
 alias montar="sudo mount -av";
 alias fixteclado="sudo setxkbmap -model abnt2 -layout br -variant abnt2";
 alias ip="./ip.sh";
@@ -24,6 +25,8 @@ alias loggit="git log --graph --decorate --pretty=oneline --abbrev-commit"
 alias listbranch="git branch -v"
 alias status="git status"
 alias commit="git commit"
+alias edirectoryxcacheclean="docker exec -it edirectoryx /root/edirectoryx/app/console cache:clear --no-warmup"
+alias edirectoryxssh="docker exec -it edirectoryx bash"
 
 
 # If not running interactively, don't do anything
@@ -69,8 +72,25 @@ updatecontaineredirectoryx() {
     echo $IP > ~/old_ip_edirectoryx
 }
 
+updatecontainerdb() {
+    IP=$(docker inspect db | grep IPAddress | cut -f4 -d'"')
+    OLD_IP=$(cat ~/old_ip_db)
+    sudo sed -i -e "s/$OLD_IP/$IP/g" /etc/hosts
+    echo $IP > ~/old_ip_db
+}
+
+updateallcontainers() {
+    updatecontainerdb && updatecontaineredirectoryx    
+}
+
 export -f fixinicial
 export -f fixvagrant
 export -f updatecontaineredirectoryx
+export -f updatecontainerdb
+export -f updateallcontainers
 
 export PATH=/home/faustino/.gem/ruby/2.2.0/bin:$PATH
+export python=/usr/bin/python2
+export PATH=~/bin:$PATH
+export PATH=/home/faustino/download/phpstorm-9/bin:$PATH
+
