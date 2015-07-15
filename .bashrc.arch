@@ -2,20 +2,40 @@
 # ~/.bashrc
 #
 
-alias ll="ls -l"
+#
+# Lazy Alias
+#
+alias ls='ls --color=auto'
+alias ll="ls -la --color -h --group-directories-first"
 alias restartnetwork="sudo systemctl restart systemd-networkd";
-alias upgrade="yaourt -Syua";
 alias montar="sudo mount -av";
-alias fixteclado="sudo setxkbmap -model abnt2 -layout br -variant abnt2";
+alias portslisting="sudo netstat -tulpn";
+
+#
+# Apps Alias
+#
 alias ip="./ip.sh";
+alias hidemouse="nohup unclutter -display :0.0 -idle 3 &"
+
+#
+# Fix Alias
+#
+alias fixvagrant_inicialize="sudo modprobe vboxdrv";
+alias fixnfs="systemctl start rpcbind.service && systemctl start nfs-server.service"
 alias fixwatchcss="echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p";
 alias fixdropbox="echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf; sudo sysctl -p";
-alias portslisting="sudo netstat -tulpn";
-alias fixvagrant_inicialize="sudo modprobe vboxdrv";
+alias fixteclado="sudo setxkbmap -model abnt2 -layout br -variant abnt2";
+
+#
+# Pacman Alias
+#
+alias upgrade="yaourt -Syua";
 alias cleanpacman="pacman -Qtdq > /dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')"
 alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches"
-alias fixnfs="systemctl start rpcbind.service && systemctl start nfs-server.service"
-alias hidemouse="nohup unclutter -display :0.0 -idle 3 &"
+
+#
+# Git alias
+#
 alias changesgit="git diff --name-status -r"
 alias diffstatgit="git diff --stat -r"
 alias whatis="git show -s --pretty='tformat:%h, %s, %ad' --date=short"
@@ -23,6 +43,11 @@ alias loggit="git log --graph --decorate --pretty=oneline --abbrev-commit"
 alias listbranch="git branch -v"
 alias status="git status"
 alias commit="git commit"
+alias changesgit="git diff --name-status -r"
+
+#
+# Docker helper alias
+#
 alias edirectoryxcacheclean="docker exec -it edirectoryx /root/edirectoryx/app/console cache:clear --no-warmup"
 alias edirectoryxssh="docker exec -it edirectoryx bash"
 
@@ -30,13 +55,12 @@ alias edirectoryxssh="docker exec -it edirectoryx bash"
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
+# I dunno know...
 PS1='[\u@\h \W]\$ '
 
-if [ -d "$HOME/opt/node-webkit" ]; then
-    PATH="$PATH:$HOME/opt/node-webkit"
-fi
-
+#
+# Powerline
+#
 if [ -f /usr/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh ]; then
     source /usr/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh
 fi
@@ -64,31 +88,49 @@ fixvagrant() {
 }
 
 updatecontaineredirectoryx() {
+    # gets container IP
     IP=$(docker inspect edirectoryx | grep IPAddress | cut -f4 -d'"')
+    # gets older IP saved in a file
     OLD_IP=$(cat ~/old_ip_edirectoryx)
+    # changes IPs in hosts file
     sudo sed -i -e "s/$OLD_IP/$IP/g" /etc/hosts
+    # copy new IP to file
     echo $IP > ~/old_ip_edirectoryx
 }
 
 updatecontainerdb() {
+    # gets container IP
     IP=$(docker inspect db | grep IPAddress | cut -f4 -d'"')
+    # gets older IP saved in a file
     OLD_IP=$(cat ~/old_ip_db)
+    # changes IPs in hosts file
     sudo sed -i -e "s/$OLD_IP/$IP/g" /etc/hosts
+    # copy new IP to file
     echo $IP > ~/old_ip_db
 }
 
 updateallcontainers() {
+    # updates IPs from projects
     updatecontainerdb && updatecontaineredirectoryx    
 }
 
+#
+# Export Functions
+#
 export -f fixinicial
 export -f fixvagrant
 export -f updatecontaineredirectoryx
 export -f updatecontainerdb
 export -f updateallcontainers
 
+#
+# Export PATH
+#
 export PATH=/home/faustino/.gem/ruby/2.2.0/bin:$PATH
 export python=/usr/bin/python2
 export PATH=~/bin:$PATH
 export PATH=/home/faustino/download/phpstorm-9/bin:$PATH
 
+if [ -d "$HOME/opt/node-webkit" ]; then
+    PATH="$PATH:$HOME/opt/node-webkit"
+fi
