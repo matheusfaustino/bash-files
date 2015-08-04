@@ -10,6 +10,7 @@ alias ll="ls -la --color -h --group-directories-first"
 alias restartnetwork="sudo systemctl restart systemd-networkd";
 alias montar="sudo mount -av";
 alias portslisting="sudo netstat -tulpn";
+alias clipboard='xclip -sel clip'
 
 #
 # Apps Alias
@@ -50,6 +51,7 @@ alias changesgit="git diff --name-status -r"
 #
 alias edirectoryxcacheclean="docker exec -it edirectoryx /root/edirectoryx/app/console cache:clear --no-warmup"
 alias edirectoryxssh="docker exec -it edirectoryx bash"
+alias edirectoryxperm="docker exec -it edirectoryx chown -R 1000:users /root/edirectoryx/"
 
 
 # If not running interactively, don't do anything
@@ -114,6 +116,22 @@ updateallcontainers() {
     updatecontainerdb && updatecontaineredirectoryx    
 }
 
+explain () {
+  if [ "$#" -eq 0 ]; then
+    while read  -p "Command: " cmd; do
+      curl -Gs "https://www.mankier.com/api/explain/?cols="$(tput cols) --data-urlencode "q=$cmd"
+    done
+    echo "Bye!"
+  elif [ "$#" -eq 1 ]; then
+    curl -Gs "https://www.mankier.com/api/explain/?cols="$(tput cols) --data-urlencode "q=$1"
+  else
+    echo "Usage"
+    echo "explain                  interactive mode."
+    echo "explain 'cmd -o | ...'   one quoted command to explain it."
+  fi
+}
+
+
 #
 # Export Functions
 #
@@ -122,6 +140,7 @@ export -f fixvagrant
 export -f updatecontaineredirectoryx
 export -f updatecontainerdb
 export -f updateallcontainers
+export -f explain
 
 #
 # Export PATH
