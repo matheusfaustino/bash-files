@@ -11,6 +11,8 @@ alias restartnetwork="sudo systemctl restart systemd-networkd";
 alias montar="sudo mount -av";
 alias portslisting="sudo netstat -tulpn";
 alias clipboard='xclip -sel clip'
+alias negocionandossh='ssh root@45.55.140.124 -p 2297';
+alias docker_ip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
 
 #
 # Apps Alias
@@ -30,9 +32,10 @@ alias fixteclado="sudo setxkbmap -model abnt2 -layout br -variant abnt2";
 #
 # Pacman Alias
 #
-alias upgrade="yaourt -Syua";
-alias cleanpacman="pacman -Qtdq > /dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')"
-alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches"
+alias upgradepacman="yaourt -Syua"; 
+alias cleanpacman="pacman -Qtdq > /dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')";
+alias optimizepacman="sudo sudo pacman -Sc && sudo pacman-optimize && cleanpacman";
+alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches";
 
 #
 # Git alias
@@ -44,15 +47,20 @@ alias loggit="git log --graph --decorate --pretty=oneline --abbrev-commit"
 alias listbranch="git branch -v"
 alias status="git status"
 alias commit="git commit"
+alias add="git add"
 alias changesgit="git diff --name-status -r"
 
 #
 # Docker helper alias
 #
-alias edirectoryxcacheclean="docker exec -it edirectoryx /root/edirectoryx/app/console cache:clear --no-warmup"
-alias edirectoryxssh="docker exec -it edirectoryx bash"
-alias edirectoryxperm="docker exec -it edirectoryx chown -R 1000:users /root/edirectoryx/"
+alias edirectoryxcacheclean="docker exec -it edirectoryx2 /var/www/html/app/console cache:clear --no-warmup"
+alias edirectoryxssh="docker exec -it edirectoryx2 bash"
+alias edirectoryxperm="docker exec -it edirectoryx2 chown -R user:1000 /var/www/html"
 
+#
+# Update command
+#
+alias upgrade="sudo pip-review --local --interactive && npm-check -gu && upgradepacman";
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -63,8 +71,8 @@ PS1='[\u@\h \W]\$ '
 #
 # Powerline
 #
-if [ -f /usr/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh ]; then
-    source /usr/lib/python3.4/site-packages/powerline/bindings/bash/powerline.sh
+if [ -f /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ]; then
+    source /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 fi
 
 fixinicial() {
@@ -91,7 +99,7 @@ fixvagrant() {
 
 updatecontaineredirectoryx() {
     # gets container IP
-    IP=$(docker inspect edirectoryx | grep IPAddress | cut -f4 -d'"')
+    IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' edirectoryx2)
     # gets older IP saved in a file
     OLD_IP=$(cat ~/old_ip_edirectoryx)
     # changes IPs in hosts file
@@ -102,7 +110,7 @@ updatecontaineredirectoryx() {
 
 updatecontainerdb() {
     # gets container IP
-    IP=$(docker inspect db | grep IPAddress | cut -f4 -d'"')
+    IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' db)
     # gets older IP saved in a file
     OLD_IP=$(cat ~/old_ip_db)
     # changes IPs in hosts file
@@ -146,10 +154,14 @@ export -f explain
 # Export PATH
 #
 export PATH=/home/faustino/.gem/ruby/2.2.0/bin:$PATH
-export python=/usr/bin/python2
+#export python=/usr/bin/python2
 export PATH=~/bin:$PATH
 export PATH=/home/faustino/download/phpstorm-9/bin:$PATH
+export DOCKER_OPTS="-dns 8.8.8.8 -dns 8.8.4.4"
 
 if [ -d "$HOME/opt/node-webkit" ]; then
     PATH="$PATH:$HOME/opt/node-webkit"
 fi
+
+
+bind Space:magic-space
