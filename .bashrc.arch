@@ -32,7 +32,8 @@ alias fixteclado="sudo setxkbmap -model abnt2 -layout br -variant abnt2";
 #
 # Pacman Alias
 #
-alias upgradepacman="yaourt -Syua"; 
+alias upgrade="yaourt -Syua"; 
+alias remove="sudo pacman -Rs"
 alias cleanpacman="pacman -Qtdq > /dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')";
 alias optimizepacman="sudo sudo pacman -Sc && sudo pacman-optimize && cleanpacman";
 alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches";
@@ -43,12 +44,22 @@ alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches";
 alias changesgit="git diff --name-status -r"
 alias diffstatgit="git diff --stat -r"
 alias whatis="git show -s --pretty='tformat:%h, %s, %ad' --date=short"
-alias loggit="git log --graph --decorate --pretty=oneline --abbrev-commit"
+alias lg="git log --color --graph --pretty=format:'%Credbold%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias listbranch="git branch -v"
 alias status="git status"
 alias commit="git commit"
 alias add="git add"
 alias changesgit="git diff --name-status -r"
+alias rank="shortlog -sn --no-merges"
+#Use it with the command. eg: git co
+alias co="checkout"; # Checkout a branch
+alias cob="checkout -b"; # Checkout a new not yet existing branch
+alias cor="checkout -"; # Go back to the last branch
+alias c="commit"; # Commit
+alias ba="branch -a"; # List both remote-tracking branches and local branches.
+alias bd="branch -d"; # Delete a branch only if it has been merged
+alias dc="diff --cached"; # Display the staged changes
+alias a="add -p"; # See the changes before adding
 
 #
 # Docker helper alias
@@ -58,15 +69,18 @@ alias edirectoryxssh="docker exec -it edirectoryx2 bash"
 alias edirectoryxperm="docker exec -it edirectoryx2 chown -R user:1000 /var/www/html"
 
 #
-# Update command
+# Update command others (python,node)
 #
-alias upgrade="sudo pip-review --local --interactive && npm-check -gu && upgradepacman";
+alias upgradeothers="sudo pip-review --local --interactive && npm-check -gu";
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
 # I dunno know...
 PS1='[\u@\h \W]\$ '
+
+# enable thefuck command. Funny command
+eval "$(thefuck --alias fuck)"
 
 #
 # Powerline
@@ -75,6 +89,7 @@ if [ -f /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ];
     source /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 fi
 
+# workaround
 fixinicial() {
     # layout teclado
 	sudo setxkbmap -model abnt2 -layout br -variant abnt2
@@ -88,6 +103,7 @@ fixinicial() {
     sudo modprobe vboxnetadp
 }
 
+# workaround
 fixvagrant() {
     # habilitar virtualização
 	sudo modprobe vboxdrv
@@ -124,6 +140,7 @@ updateallcontainers() {
     updatecontainerdb && updatecontaineredirectoryx    
 }
 
+# explain commands
 explain () {
   if [ "$#" -eq 0 ]; then
     while read  -p "Command: " cmd; do
@@ -156,7 +173,6 @@ export -f explain
 export PATH=/home/faustino/.gem/ruby/2.2.0/bin:$PATH
 #export python=/usr/bin/python2
 export PATH=~/bin:$PATH
-export PATH=/home/faustino/download/phpstorm-9/bin:$PATH
 export DOCKER_OPTS="-dns 8.8.8.8 -dns 8.8.4.4"
 
 if [ -d "$HOME/opt/node-webkit" ]; then
