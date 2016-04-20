@@ -11,13 +11,14 @@ alias restartnetwork="sudo systemctl restart systemd-networkd";
 alias montar="sudo mount -av";
 alias portslisting="sudo netstat -tulpn";
 alias clipboard='xclip -sel clip'
-alias negocionandossh='ssh root@45.55.140.124 -p 2297';
 alias docker_ip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
+alias refresh="source ~/.bashrc"
+alias editbashrc="vim ~/.bashrc"
+alias -- -='cd -' # type - to "cd -"
 
 #
 # Apps Alias
 #
-alias ip="./ip.sh";
 alias hidemouse="nohup unclutter -display :0.0 -idle 3 &"
 
 #
@@ -42,31 +43,30 @@ alias cleanmemory="sync && echo 3 | sudo tee /proc/sys/vm/drop_caches";
 # Git alias
 #
 alias changesgit="git diff --name-status -r"
-alias diffstatgit="git diff --stat -r"
-alias whatis="git show -s --pretty='tformat:%h, %s, %ad' --date=short"
-alias lg="git log --color --graph --pretty=format:'%Credbold%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias listbranch="git branch -v"
-alias status="git status"
-alias commit="git commit"
-alias add="git add"
+alias gdiff="git diff --stat -r"
+alias ghead="git show -s --pretty='tformat:%h, %s, %ad' --date=short"
+alias gl="git log --color --graph --pretty=format:'%Credbold%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gb="git branch -v"
+alias g="git status -sb"
+alias gc="git commit"
+alias ga="git add"
+alias gpl="git pull"
+alias gps="git push"
 alias changesgit="git diff --name-status -r"
 alias rank="shortlog -sn --no-merges"
 #Use it with the command. eg: git co
 alias co="checkout"; # Checkout a branch
-alias cob="checkout -b"; # Checkout a new not yet existing branch
-alias cor="checkout -"; # Go back to the last branch
-alias c="commit"; # Commit
-alias ba="branch -a"; # List both remote-tracking branches and local branches.
-alias bd="branch -d"; # Delete a branch only if it has been merged
-alias dc="diff --cached"; # Display the staged changes
-alias a="add -p"; # See the changes before adding
+alias cob="git checkout -b"; # Checkout a new not yet existing branch
+alias cor="git checkout -"; # Go back to the last branch
+alias gba="git branch -a"; # List both remote-tracking branches and local branches.
+alias gbd="git branch -d"; # Delete a branch only if it has been merged
+alias gdc="git diff --cached"; # Display the staged changes
+alias gap="git add -p"; # See the changes before adding
 
 #
-# Docker helper alias
+# Composer shortcut
 #
-alias edirectoryxcacheclean="docker exec -it edirectoryx2 /var/www/html/app/console cache:clear --no-warmup"
-alias edirectoryxssh="docker exec -it edirectoryx2 bash"
-alias edirectoryxperm="docker exec -it edirectoryx2 chown -R user:1000 /var/www/html"
+alias composer-dp="composer show -i"; # It shows project's dependency
 
 #
 # Update command others (python,node)
@@ -88,6 +88,41 @@ eval "$(thefuck --alias fuck)"
 if [ -f /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ]; then
     source /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 fi
+
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
+
+# Append to the history file, don't overwrite it
+shopt -s histappend
+# Save multi-line commands as one command
+shopt -s cmdhist
+# Append cd command when a directory's name is typed
+shopt -s autocd
+# autocorrect minor spelling errors in directory name (both)
+shopt -s dirspell
+shopt -s cdspell
+
+#
+# Better Bash History 
+#
+
+
+# Huge history. Doesn't appear to slow things down, so why not?
+HISTSIZE=500000
+HISTFILESIZE=100000
+
+# Avoid duplicate entries
+HISTCONTROL="erasedups:ignoreboth"
+
+# Don't record some commands
+export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history"
+
+# Useful timestamp format
+HISTTIMEFORMAT='%F %T '
+
+###################################
+
+# Adds "projeto" path to always be possible to jump to a particular project, whenever I want
+CDPATH=".:~/projeto"
 
 # workaround
 fixinicial() {
