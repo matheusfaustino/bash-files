@@ -1,0 +1,16 @@
+# recommended by arch website
+$include /etc/inputrc
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# Completion tweaks
+set completion-ignore-case on
+set completion-map-case on
+set show-all-if-ambiguous on
+set mark-symlinked-directories on
+set match-hidden-files on
+set skip-completed-text on
+
+# Due to an update to readline, the terminal now echoes ^C after Ctrl+C is pressed. For users who wish to disable this, simply add
+set echo-control-characters off
