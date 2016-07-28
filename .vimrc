@@ -21,6 +21,10 @@ let g:mapleader = ","
 
 " Fast saving
 nmap <leader>w :w!<cr>
+" fast saving and exit
+nmap <leader>x :x!<cr>
+" fast quit
+nmap <leader>q :q!<cr>
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
@@ -82,7 +86,6 @@ set tm=500
 " Add a bit extra margin to the left
 set foldcolumn=1
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -104,6 +107,11 @@ set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
 
+" identation
+set breakindent
+set breakindentopt=sbr
+" I use a unicode curly array with a <backslash><space>
+set showbreak=↪>\
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
